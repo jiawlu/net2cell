@@ -281,11 +281,6 @@ class CNetGenerator:
 
     def createMicroNetForConnector(self, mesolink,ib_mesolink,ib_lane_index_start,ob_mesolink,ob_lane_index_start):
 
-        # print(mesolink.link_id)
-
-        if mesolink.link_id == 259452:
-            a = 1
-
         for i in range(mesolink.number_of_lanes):
             start_micronode = self.micro_node_list[self.micro_node_id_to_seq_no_dict[ib_mesolink.micro_node_list[ib_lane_index_start+i][-1]]]
             end_micronode = self.micro_node_list[self.micro_node_id_to_seq_no_dict[ob_mesolink.micro_node_list[ob_lane_index_start+i][0]]]
@@ -298,6 +293,8 @@ class CNetGenerator:
 
             last_micronode = start_micronode
             remaining_length = total_length
+
+            first_cell = True
 
             while remaining_length > self.length_of_cell * 1.5:
                 micronode = micronet.CMicroNode()
@@ -323,6 +320,7 @@ class CNetGenerator:
                 microlink.speed_limit = mesolink.speed_limit
                 microlink.cell_type = 1	            # //1:traveling; 2:changing
                 microlink.additional_cost = 0.0
+                if first_cell: microlink.movement_str = mesolink.movement_str
                 self.number_of_micro_links += 1
                 self.micro_link_list.append(microlink)
                 self.micro_link_id_to_seq_no_dict[microlink.link_id] = microlink.link_seq_no
@@ -332,6 +330,7 @@ class CNetGenerator:
 
                 remaining_length -= self.length_of_cell
                 last_micronode = micronode
+                first_cell = False
 
             microlink = micronet.CMicroLink()
             microlink.link_id = self.number_of_micro_links
@@ -343,6 +342,7 @@ class CNetGenerator:
             microlink.speed_limit = mesolink.speed_limit
             microlink.cell_type = 1	            # //1:traveling; 2:changing
             microlink.additional_cost = 0.0
+            if first_cell: microlink.movement_str = mesolink.movement_str
             self.number_of_micro_links += 1
             self.micro_link_list.append(microlink)
             self.micro_link_id_to_seq_no_dict[microlink.link_id] = microlink.link_seq_no
@@ -549,11 +549,10 @@ class CNetGenerator:
                 mesolink.movement_str = mvmt.movement_str
                 mesolink.main_node_id = ib_link.to_node.main_node_id
 
-                # if mesolink.main_node_id is not None:
-                #     if ib_link.to_node.control_type == 1:
-                #         ib_start, ib_end = ib_mesolink.geometry_list[0], ib_mesolink.geometry_list[-1]
-                #         ob_start, ob_end = ob_mesolink.geometry_list[0], ob_mesolink.geometry_list[-1]
-                #         mesolink.movement_str = getMovementStr(ib_start, ib_end, ob_start, ob_end)
+                if ib_link.to_node.control_type == 1:
+                    ib_start, ib_end = ib_mesolink.geometry_list[0], ib_mesolink.geometry_list[-1]
+                    ob_start, ob_end = ob_mesolink.geometry_list[0], ob_mesolink.geometry_list[-1]
+                    mesolink.movement_str = getMovementStr(ib_start, ib_end, ob_start, ob_end)
 
                 try:
                     up_start_lane_coord = ib_mesolink.section_lane_coord_list[-1][ib_lane_index_start][1]
@@ -765,11 +764,12 @@ class CNetGenerator:
                     mesolink.geometry_list_no_lane_offset = [ib_mesolink.geometry_list[-1], ob_mesolink.geometry_list[0]]
 
                     mesolink.main_node_id = ib_link.to_node.main_node_id
-                    # if mesolink.main_node_id is not None:
-                    #     if ib_link.to_node.control_type == 1:
-                    #         ib_start, ib_end = ib_mesolink.geometry_list[0], ib_mesolink.geometry_list[-1]
-                    #         ob_start, ob_end = ob_mesolink.geometry_list[0], ob_mesolink.geometry_list[-1]
-                    #         mesolink.movement_str = getMovementStr(ib_start, ib_end, ob_start, ob_end)
+                    # ==========================================
+
+                    if ib_link.to_node.control_type == 1:       # if ib_link.to_node.control_type == 1:
+                        ib_start, ib_end = ib_mesolink.geometry_list[0], ib_mesolink.geometry_list[-1]
+                        ob_start, ob_end = ob_mesolink.geometry_list[0], ob_mesolink.geometry_list[-1]
+                        mesolink.movement_str = getMovementStr(ib_start, ib_end, ob_start, ob_end)
 
                     for i in range(len(mesolink.geometry_list) - 1):
                         mesolink.length += ((mesolink.geometry_list[i + 1][0] - mesolink.geometry_list[i][0]) ** 2 + (

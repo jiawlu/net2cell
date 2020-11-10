@@ -11,16 +11,15 @@ from outputnet import *
 
 
 
-working_directory = r'C:\Users\Lujia\Dropbox (ASU)\Work\CAVLite\dataset\mt_less_detailed_v8'
-# working_directory = r'..\Datasets\Lima_sub'
+working_directory = r'C:\Users\Administrator\Dropbox (ASU)\Work\CAVLite\OSM2GMNS\V2\test\consolidated'
 
 coordinate_type = 'll'                          # m: meter, ll: latlon, f: feet
-geometry_source = 'g'                           # n: none, l: link file, g: geomerey file
-unit_of_length = 'mi'                           # m: meter, km:kilometer, mi: mile, f: feet
+geometry_source = 'l'                           # n: none, l: link file, g: geomerey file
+unit_of_length = 'm'                           # m: meter, km:kilometer, mi: mile, f: feet
 segment_unit = 'm'                              # m: meter, km:kilometer, mi: mile, f: feet
-speed_unit = 'mph'                              # mph: mile per hour, kpm: kilometer per hour
+speed_unit = 'mph'                              # mph: mile per hour, kph: kilometer per hour
 
-link_type_list = [1, 3, 4]                      # discard link types not in this list
+link_type_list = [1,2,3,4,5,6,7]                      # discard link types not in this list
 connector_type = -1                             # link type of connetors, -1 if no connector
 
 min_link_length = 3.0                           # meter, links shorter than that will be removed, > 2 * lenght_of_cut[0]
@@ -30,7 +29,6 @@ connector_geometry_for_output = 2               # 1: with lane offset; 2: no lan
 
 length_of_cell = 7.0
 length_of_cut = {0: 1.0, 1: 8.0, 2: 12.0, 3: 14.0, 4: 16.0, 5: 18.0, 6: 20, 7:22, 8:24}  # e.g. 2:8.0 cut 8 meters if the original macro link has 2 lanes, etc
-# length_of_cut = {0: 1.0, 1: 1.0, 2: 1.0, 3: 1.0, 4: 1.0, 5: 1.0, 6: 1.0, 7:1.0}  # e.g. 2:8.0 cut 8 meters if the original macro link has 2 lanes, etc
 cells_in_queue_area = 0            # for Signalized Intersections
 width_of_lane = 3.5
 

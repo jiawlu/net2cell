@@ -166,11 +166,15 @@ def outputNetworks(macro_net, net_generator,connector_geometry_for_output):
     with open(os.path.join(micro_net_folder,'link.csv'), 'w', newline='') as outfile:
         writer = csv.writer(outfile)
         writer.writerow(['link_id','from_node_id','to_node_id','facility_type','dir_flag','length','lanes','capacity',
-                         'free_speed','link_type','cost','meso_link_id','cell_type','additional_cost'])
+                         'free_speed','link_type','cost','geometry','meso_link_id','cell_type','additional_cost','movement_str'])
         for microlink in net_generator.micro_link_list:
             if not microlink.valid: continue
+            from_node = net_generator.micro_node_list[net_generator.micro_node_id_to_seq_no_dict[microlink.from_node_id]]
+            to_node = net_generator.micro_node_list[net_generator.micro_node_id_to_seq_no_dict[microlink.to_node_id]]
+            geometry_str = f'LINESTRING ({from_node.x_coord_original_type} {from_node.y_coord_original_type}, ' \
+                           f'{to_node.x_coord_original_type} {to_node.y_coord_original_type})'
             line = [microlink.link_id, microlink.from_node_id, microlink.to_node_id,'','',microlink.length,1,'',microlink.speed_limit,
-                    '','',microlink.meso_link_id,microlink.cell_type,microlink.additional_cost]
+                    '','',geometry_str, microlink.meso_link_id,microlink.cell_type,microlink.additional_cost,microlink.movement_str]
             writer.writerow(line)
 
     if net_generator.qa is None: return

@@ -38,3 +38,4 @@ class CMicroLink:
         self.cell_type = 1	            # //1:traveling; 2:changing
 
         self.valid = True
+        self.movement_str = ''

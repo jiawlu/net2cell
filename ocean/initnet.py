@@ -20,18 +20,19 @@ class CNode:
         self.y_coord = 0.0
         self.lat = 0.0
         self.lon = 0.0
-        self.zone_id = -1
+        self.zone_id = None
         self.node_seq_no = 0
+        self.control_type = ''
         self.m_outgoing_link_list = []
         self.m_incoming_link_list = []
 
         self.valid = True
         self.is_centroid = True
         self.centroid_meso_node = None
-        self.main_node_id = None
-        # self.new_node = None        # create a new macro node for main node
 
-        self.control_type = 0
+        self.main_node_id = None
+        self.new_node = None        # create a new macro node for main node
+
         self.movement_link_needed = True
 
         self.x_coord_original_type = 0.0
@@ -271,7 +272,7 @@ class CInitNet:
 
     def readInputData(self):
         print('Reading input data...')
-        #--------------------Node----------------------#
+        # --------------------Node----------------------#
         print('  reading node.csv')
         node_data = pd.read_csv(os.path.join(self.working_directory,'node.csv'))
         self.number_of_nodes = len(node_data)
@@ -331,23 +332,23 @@ class CInitNet:
             for node_seq_no, node in enumerate(self.node_list):
                 node.x_coord, node.y_coord = utm_x[node_seq_no], utm_y[node_seq_no]
 
-        # for main_node_id, subnode_list in self.main_node_id_to_subnode_list_dict.items():
-        #     node = CNode()
-        #     node.node_id = self.max_node_id + 1
-        #     node.node_seq_no = self.number_of_nodes
-        #     node.x_coord = sum([subnode.x_coord for subnode in subnode_list]) / len(subnode_list)
-        #     node.y_coord = sum([subnode.y_coord for subnode in subnode_list]) / len(subnode_list)
-        #     node.control_type = self.main_node_control_type_dict[main_node_id]
-        #     node.main_node_id = main_node_id
-        #     self.node_list.append(node)
-        #
-        #     self.node_id_to_seq_no_dict[node.node_id] = node.node_seq_no
-        #     self.main_node_id_to_node_dict[main_node_id] = node
-        #     for subnode in subnode_list: subnode.new_node = node
-        #     self.max_node_id += 1
-        #     self.number_of_nodes += 1
+        for main_node_id, subnode_list in self.main_node_id_to_subnode_list_dict.items():
+            node = CNode()
+            node.node_id = self.max_node_id + 1
+            node.node_seq_no = self.number_of_nodes
+            node.x_coord = sum([subnode.x_coord for subnode in subnode_list]) / len(subnode_list)
+            node.y_coord = sum([subnode.y_coord for subnode in subnode_list]) / len(subnode_list)
+            node.control_type = self.main_node_control_type_dict[main_node_id]
+            node.main_node_id = main_node_id
+            self.node_list.append(node)
 
-        #---------------------Link-----------------------#
+            self.node_id_to_seq_no_dict[node.node_id] = node.node_seq_no
+            # self.main_node_id_to_node_dict[main_node_id] = node
+            for subnode in subnode_list: subnode.new_node = node
+            self.max_node_id += 1
+            self.number_of_nodes += 1
+
+        # ---------------------Link-----------------------#
         print('  reading link.csv')
         link_data = pd.read_csv(os.path.join(self.working_directory,'link.csv'), encoding='gb18030')
         self.number_of_links = 0
@@ -365,12 +366,12 @@ class CInitNet:
 
                 from_node_id = int(link_data.loc[i,'from_node_id'])
                 from_node = self.node_list[self.node_id_to_seq_no_dict[from_node_id]]
-                # if from_node.new_node is not None: from_node = from_node.new_node
+                if from_node.new_node is not None: from_node = from_node.new_node
                 link.from_node_id = from_node.node_id
                 link.from_node = from_node
                 to_node_id = int(link_data.loc[i,'to_node_id'])
                 to_node = self.node_list[self.node_id_to_seq_no_dict[to_node_id]]
-                # if to_node.new_node is not None: to_node = to_node.new_node
+                if to_node.new_node is not None: to_node = to_node.new_node
                 link.to_node_id = to_node.node_id
                 link.to_node = to_node
                 if link.from_node_id == link.to_node_id: continue
@@ -443,7 +444,7 @@ class CInitNet:
             if (len(node.m_incoming_link_list) == 0) and (len(node.m_outgoing_link_list) == 0):
                 node.valid = False
 
-        #------------------Movement--------------------#
+        # ------------------Movement--------------------#
         movement_file = os.path.join(self.working_directory,'movement.csv')
         if os.path.isfile(movement_file):
             print('  reading movement.csv')
@@ -524,7 +525,7 @@ class CInitNet:
                     ib_link.downstream_short_cut = True
 
 
-        #------------------Segment--------------------#
+        # ------------------Segment--------------------#
         segment_file = os.path.join(self.working_directory,'segment.csv')
         if os.path.isfile(segment_file):
             print('  reading segment.csv')
@@ -567,7 +568,7 @@ class CInitNet:
                 self.number_of_segments += 1
                 self.segment_list.append(segment)
 
-        #------------------Geometry--------------------#
+        # ------------------Geometry--------------------#
         if self.geometry_source == 'g':
             print('  reading link_geometry.csv')
             geometry_data = pd.read_csv(os.path.join(self.working_directory,'link_geometry.csv'))
@@ -628,7 +629,7 @@ class CInitNet:
 
             link.max_number_of_lanes = max(link.number_of_lanes_list)
 
-        #------------------obtainGeometry--------------#
+        # ------------------obtainGeometry--------------#
         original_geometry_to_link_dict = {}
         for link in self.link_list:
             if self.geometry_source == 'n':
@@ -667,14 +668,15 @@ class CInitNet:
                         geometry_list_temp.append(tuple(map(float, coord_temp)))
                 else:
                     coord_str = re.findall(r'LINESTRING [(](.*?)[)]', link.geometry_str)[0]
-                    coord_str_list = coord_str.split(',')
+                    coord_str_list = coord_str.split(', ')
                     for item in coord_str_list:
                         coord_temp = item.split(' ')[:2]
                         geometry_list_temp.append(tuple(map(float, coord_temp)))
 
                 geometry_list_temp_set = list(set(geometry_list_temp))
                 if len(geometry_list_temp_set) != len(geometry_list_temp):
-                    geometry_list = geometry_list_temp_set.sort(key=geometry_list_temp.index)
+                    # geometry_list = geometry_list_temp_set.sort(key=geometry_list_temp.index)
+                    geometry_list = sorted(geometry_list_temp_set,key=geometry_list_temp.index)
                 else:
                     geometry_list = geometry_list_temp
 
@@ -746,7 +748,7 @@ class CInitNet:
             if link.coord_length < self.min_link_length:
                 self.short_link_list.append(link)
 
-        #================= remove short links ===============#
+        # ================= remove short links ===============#
         if self.short_link_list: print('  removing links shorter than {} meters'.format(self.min_link_length))
         number_of_removed_links = 0
         for link in self.short_link_list:
