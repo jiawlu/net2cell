@@ -1,8 +1,3 @@
-# @author        Jiawei Lu
-# @email         jiaweil9@asu.edu
-# @create date   2020-04-16 17:08:03
-# @desc          [description]
-
 import os
 import csv
 

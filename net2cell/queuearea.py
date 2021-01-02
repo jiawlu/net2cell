@@ -1,11 +1,6 @@
-# @author       Jiawei Lu
-# @email        jiaweil9@asu.edu
-# @create date  2020/07/26 12:55
-# @desc         [description]
-
 import copy
-import micronet
-import mesonet
+from .micronet import *
+from .mesonet import *
 
 class CQueueArea:
     def __init__(self,ng):
@@ -89,7 +84,7 @@ class CQueueArea:
                         mid_x_coord = (connector_end_x - connector_start_x) / connector.length * self.ng.length_of_cell * actual_cells + connector_start_x
                         mid_y_coord = (connector_end_y - connector_start_y) / connector.length * self.ng.length_of_cell * actual_cells + connector_start_y
 
-                    mid_meso_node = mesonet.CMesoNode()
+                    mid_meso_node = CMesoNode()
                     mid_meso_node.node_id = self.number_of_meso_nodes
                     mid_meso_node.node_seq_no = self.number_of_meso_nodes
                     mid_meso_node.x_coord = mid_x_coord
@@ -98,7 +93,7 @@ class CQueueArea:
                     self.number_of_meso_nodes += 1
                     self.meso_node_id_to_seq_no_dict[mid_meso_node.node_id] = mid_meso_node.node_seq_no
 
-                    meso_link1 = mesonet.CMesoLink()
+                    meso_link1 = CMesoLink()
                     meso_link1.link_id = self.number_of_meso_links
                     meso_link1.link_seq_no = self.number_of_meso_links
                     meso_link1.from_node_id = meso_node.node_id
@@ -114,7 +109,7 @@ class CQueueArea:
                     self.number_of_meso_links += 1
                     self.meso_link_id_to_seq_no_dict[meso_link1.link_id] = meso_link1.link_seq_no
 
-                    meso_link2 = mesonet.CMesoLink()
+                    meso_link2 = CMesoLink()
                     meso_link2.link_id = self.number_of_meso_links
                     meso_link2.link_seq_no = self.number_of_meso_links
                     meso_link2.from_node_id = mid_meso_node.node_id
@@ -138,7 +133,7 @@ class CQueueArea:
                             from_micro_node = self.micro_node_list[self.micro_node_id_to_seq_no_dict[original_micro_link.from_node_id]]
                             to_micro_node = self.micro_node_list[self.micro_node_id_to_seq_no_dict[original_micro_link.to_node_id]]
 
-                            mid_micro_node = micronet.CMicroNode()
+                            mid_micro_node = CMicroNode()
                             mid_micro_node.node_id = self.number_of_micro_nodes
                             mid_micro_node.node_seq_no = self.number_of_micro_nodes
                             mid_micro_node.x_coord = 0.5 * (from_micro_node.x_coord + to_micro_node.x_coord)
@@ -150,7 +145,7 @@ class CQueueArea:
                             # mesolink.micro_node_list[-1].append(micronode.node_id)
                             self.number_of_micro_nodes += 1
 
-                            microlink1 = micronet.CMicroLink()
+                            microlink1 = CMicroLink()
                             microlink1.link_id = self.number_of_micro_links
                             microlink1.link_seq_no = self.number_of_micro_links
                             microlink1.from_node_id = from_micro_node.node_id
@@ -164,7 +159,7 @@ class CQueueArea:
                             self.micro_link_list.append(microlink1)
                             # mesolink.micro_link_list[-1].append(microlink)
 
-                            microlink2 = micronet.CMicroLink()
+                            microlink2 = CMicroLink()
                             microlink2.link_id = self.number_of_micro_links
                             microlink2.link_seq_no = self.number_of_micro_links
                             microlink2.from_node_id = mid_micro_node.node_id

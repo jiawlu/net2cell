@@ -1,17 +1,11 @@
-# @author        Jiawei Lu
-# @email         jiaweil9@asu.edu
-# @create date   2020-04-16 16:29:15
-# @desc          [description]
-
-
 import pandas as pd
 import os
-from exitprogram import *
+from .util import exitProgram
 import re
 import numpy as np
-from coordconvertor import Convertor
+from .coordconvertor import Convertor
 import locale
-from settings import *
+from .settings import *
 
 
 class CNode:
@@ -242,9 +236,9 @@ class CGeometry:
 
 
 class CInitNet:
-    def __init__(self, working_directory, coordinate_type, geometry_source, unit_of_length, segment_unit, speed_unit,
-                 link_type_list, connector_type, min_link_length, comb_links, width_of_lane):
-        self.working_directory = working_directory
+    def __init__(self, cwd, coordinate_type, geometry_source, unit_of_length, segment_unit, speed_unit,
+                 link_types, connector_type, min_link_length, combine, width_of_lane):
+        self.working_directory = cwd
         self.coordinate_type = coordinate_type
         self.geometry_source = geometry_source
         self.unit_of_length = unit_of_length
@@ -252,11 +246,11 @@ class CInitNet:
         self.speed_unit = speed_unit
         self.width_of_lane = width_of_lane
 
-        self.link_type_list = link_type_list
+        self.link_types = link_types
         self.connector_type = connector_type
 
         self.min_link_length = min_link_length
-        self.comb_links = comb_links
+        self.comb_links = combine
 
         self.TMC_flag = False
 
@@ -287,47 +281,6 @@ class CInitNet:
 
         self.main_node_id_to_subnode_list_dict = {}     # to original subnodes
         self.main_node_control_type_dict = {}
-
-        self.checkArguments()
-
-    def checkArguments(self):
-        if not os.path.exists(self.working_directory):
-            print(f'ERROR: {self.working_directory} is not a valid directory. Press Enter key to exit')
-            exitProgram()
-        if self.coordinate_type not in ['m','ll','f']:
-            print('ERROR: coordinate_type must be chosen from m,ll,f')
-            exitProgram()
-        if self.geometry_source not in ['n','l','g']:
-            print('ERROR: geometry_source must be chosen from n,l,g')
-            exitProgram()
-        if self.unit_of_length not in ['m','km','mi','f']:
-            print('unit_of_length must be chosen from m,km,mi,f')
-            exitProgram()
-        if self.segment_unit not in ['m','km','mi','f']:
-            print('segment_unit must be chosen from m,km,mi,f')
-            exitProgram()
-        if self.speed_unit not in ['mph','kph']:
-            print('speed_unit must be chosen from mph,kph')
-            exitProgram()
-        if self.speed_unit not in ['mph','kph']:
-            print('speed_unit must be chosen from mph,kph')
-            exitProgram()
-        if not isinstance(self.link_type_list,list):
-            print('argument link_type_list must be a list')
-            exitProgram()
-        if not (isinstance(self.min_link_length,int) or isinstance(self.min_link_length,float)):
-            print('min_link_length must be an integer and float')
-            exitProgram()
-        if not isinstance(self.comb_links,bool):
-            print('comb_links must be a bool')
-            exitProgram()
-        if not (isinstance(self.width_of_lane,int) or isinstance(self.width_of_lane,float)):
-            print('width_of_lane must be an integer and float')
-            exitProgram()
-        if self.width_of_lane <= 0:
-            print('width_of_lane must be positive')
-            exitProgram()
-
 
     def readInputData(self):
         print('Reading input data...')
@@ -450,7 +403,7 @@ class CInitNet:
             link = CLink()
             try:
                 link.link_type = link_data.loc[i,'link_type']
-                if link.link_type not in self.link_type_list: continue
+                if (self.link_types is not None) and (link.link_type not in self.link_types): continue
                 if link.link_type == self.connector_type: link.is_connector = True
 
                 link.link_id = link_data.loc[i,'link_id']

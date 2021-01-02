@@ -1,8 +1,3 @@
-# @author       Jiawei Lu
-# @email        jiaweil9@asu.edu
-# @create date  2020/07/31 12:14
-# @desc         [description]
-
 # development based on package utm, https://github.com/Turbo87/utm
 
 

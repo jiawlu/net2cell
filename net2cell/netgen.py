@@ -1,14 +1,8 @@
-# @author        Jiawei Lu
-# @email         jiaweil9@asu.edu
-# @create date   2020-04-16 16:32:41
-# @desc          [description]
-
-
 import numpy as np
-from autoconintd import *
-from autoconm import *
-from queuearea import *
-from exitprogram import *
+from .autoconintd import *
+from .autoconm import *
+from .queuearea import *
+from .util import exitProgram
 
 
 class CNetGenerator:
@@ -36,9 +30,7 @@ class CNetGenerator:
         self.micro_link_id_to_seq_no_dict = {}
 
         self.meso_link_key_to_seq_no_dict = {}
-
         self.processed_node_id_set = set()
-
         self.qa = None
 
     
@@ -78,7 +70,7 @@ class CNetGenerator:
                 section_micro_node_id_list = [[] for _ in range(mesolink.number_of_lanes)]
             
                 for i in range(mesolink.number_of_lanes):
-                    micronode = micronet.CMicroNode()
+                    micronode = CMicroNode()
                     micronode.node_id = self.number_of_micro_nodes
                     micronode.node_seq_no = self.number_of_micro_nodes
                     micronode.x_coord = mesolink.section_lane_coord_list[section_no][i][0][0]
@@ -99,7 +91,7 @@ class CNetGenerator:
                 cell_no = 1
                 while remaining_length > self.length_of_cell * 1.5:
                     for i in range(mesolink.number_of_lanes):
-                        micronode = micronet.CMicroNode()
+                        micronode = CMicroNode()
                         micronode.node_id = self.number_of_micro_nodes
                         micronode.node_seq_no = self.number_of_micro_nodes
                         micronode.x_coord = mesolink.section_lane_coord_list[section_no][i][0][0] + cell_no * mesolink.section_cell_offset_list[section_no][0]
@@ -115,7 +107,7 @@ class CNetGenerator:
                     remaining_length -= self.length_of_cell
             
                 for i in range(mesolink.number_of_lanes):
-                    micronode = micronet.CMicroNode()
+                    micronode = CMicroNode()
                     micronode.node_id = self.number_of_micro_nodes
                     micronode.node_seq_no = self.number_of_micro_nodes
                     micronode.x_coord = mesolink.section_lane_coord_list[section_no][i][1][0]
@@ -149,7 +141,7 @@ class CNetGenerator:
                         solution = np.linalg.inv(A_mat) * b_mat
                         x, y = solution[0,0], solution[1,0]
 
-                    micronode = micronet.CMicroNode()
+                    micronode = CMicroNode()
                     micronode.node_id = self.number_of_micro_nodes
                     micronode.node_seq_no = self.number_of_micro_nodes
                     micronode.x_coord = x
@@ -224,7 +216,7 @@ class CNetGenerator:
                     from_node = self.micro_node_list[self.micro_node_id_to_seq_no_dict[mesolink.micro_node_list[i][j]]]
                     to_node = self.micro_node_list[self.micro_node_id_to_seq_no_dict[mesolink.micro_node_list[i][j+1]]]
 
-                    microlink = micronet.CMicroLink()
+                    microlink = CMicroLink()
                     microlink.link_id = self.number_of_micro_links
                     microlink.link_seq_no = self.number_of_micro_links
                     microlink.from_node_id = from_node.node_id
@@ -246,7 +238,7 @@ class CNetGenerator:
                     for j in range(len(mesolink.micro_node_list[i])-1):
                         from_node = self.micro_node_list[self.micro_node_id_to_seq_no_dict[mesolink.micro_node_list[i][j]]]
                         to_node = self.micro_node_list[self.micro_node_id_to_seq_no_dict[mesolink.micro_node_list[i+1][j+1]]]
-                        microlink = micronet.CMicroLink()
+                        microlink = CMicroLink()
                         microlink.link_id = self.number_of_micro_links
                         microlink.link_seq_no = self.number_of_micro_links
                         microlink.from_node_id = from_node.node_id
@@ -267,7 +259,7 @@ class CNetGenerator:
                     for j in range(len(mesolink.micro_node_list[i])-1):
                         from_node = self.micro_node_list[self.micro_node_id_to_seq_no_dict[mesolink.micro_node_list[i][j]]]
                         to_node = self.micro_node_list[self.micro_node_id_to_seq_no_dict[mesolink.micro_node_list[i-1][j+1]]]
-                        microlink = micronet.CMicroLink()
+                        microlink = CMicroLink()
                         microlink.link_id = self.number_of_micro_links
                         microlink.link_seq_no = self.number_of_micro_links
                         microlink.from_node_id = from_node.node_id
@@ -302,7 +294,7 @@ class CNetGenerator:
             first_cell = True
 
             while remaining_length > self.length_of_cell * 1.5:
-                micronode = micronet.CMicroNode()
+                micronode = CMicroNode()
                 micronode.node_id = self.number_of_micro_nodes
                 micronode.node_seq_no = self.number_of_micro_nodes
                 micronode.x_coord = last_micronode.x_coord + cell_offset_x
@@ -315,7 +307,7 @@ class CNetGenerator:
                 mesolink.micro_node_list[-1].append(micronode)
                 self.number_of_micro_nodes += 1
 
-                microlink = micronet.CMicroLink()
+                microlink = CMicroLink()
                 microlink.link_id = self.number_of_micro_links
                 microlink.link_seq_no = self.number_of_micro_links
                 microlink.from_node_id = last_micronode.node_id
@@ -337,7 +329,7 @@ class CNetGenerator:
                 last_micronode = micronode
                 first_cell = False
 
-            microlink = micronet.CMicroLink()
+            microlink = CMicroLink()
             microlink.link_id = self.number_of_micro_links
             microlink.link_seq_no = self.number_of_micro_links
             microlink.from_node_id = last_micronode.node_id
@@ -409,7 +401,7 @@ class CNetGenerator:
         # create new meso nodes for centroids
         for node in self.macro_net.node_list:
             if node.is_centroid and node.valid:
-                meso_node = mesonet.CMesoNode()
+                meso_node = CMesoNode()
                 meso_node.node_id = node.node_id * 100 + node.number_of_expanded_mesonode
                 meso_node.node_seq_no = self.number_of_meso_nodes
                 meso_node.x_coord = node.x_coord
@@ -432,7 +424,7 @@ class CNetGenerator:
             if link.from_node.is_centroid:
                 upstream_node = link.from_node.centroid_meso_node
             else:
-                upstream_node = mesonet.CMesoNode()
+                upstream_node = CMesoNode()
                 upstream_node.node_id = link.from_node.node_id * 100 + link.from_node.number_of_expanded_mesonode
                 upstream_node.node_seq_no = self.number_of_meso_nodes
                 upstream_node.x_coord = link.cutted_geometry_list[0][0][0]
@@ -451,7 +443,7 @@ class CNetGenerator:
                 if link.to_node.is_centroid and section_no == link.cutted_number_of_sections - 1:
                     downstream_node = link.to_node.centroid_meso_node
                 else:
-                    downstream_node = mesonet.CMesoNode()
+                    downstream_node = CMesoNode()
                     downstream_node.node_id = link.to_node.node_id * 100 + link.to_node.number_of_expanded_mesonode
                     downstream_node.node_seq_no = self.number_of_meso_nodes
                     downstream_node.x_coord = link.cutted_geometry_list[section_no][-1][0]
@@ -466,7 +458,7 @@ class CNetGenerator:
                     link.to_node.number_of_expanded_mesonode += 1
                     self.meso_node_id_to_seq_no_dict[downstream_node.node_id] = downstream_node.node_seq_no
 
-                mesolink = mesonet.CMesoLink()
+                mesolink = CMesoLink()
                 mesolink.link_id = self.number_of_meso_links
                 mesolink.link_seq_no = self.number_of_meso_links
                 mesolink.from_node_id = upstream_node.node_id
@@ -547,7 +539,7 @@ class CNetGenerator:
             macro_node = ib_link.to_node
             if macro_node.movement_link_needed:
                 # need movement link
-                mesolink = mesonet.CMesoLink()
+                mesolink = CMesoLink()
                 mesolink.link_id = self.number_of_meso_links
                 mesolink.link_seq_no = self.number_of_meso_links
                 mesolink.from_node_id = ib_mesolink.to_node_id
@@ -750,7 +742,7 @@ class CNetGenerator:
                     ob_lane_index_start = connection_list[ob_mesolink_no][1][0]
                     ob_lane_index_end = connection_list[ob_mesolink_no][1][1]
 
-                    mesolink = mesonet.CMesoLink()
+                    mesolink = CMesoLink()
                     mesolink.link_id = self.number_of_meso_links
                     mesolink.link_seq_no = self.number_of_meso_links
                     mesolink.from_node_id = ib_mesolink.to_node_id

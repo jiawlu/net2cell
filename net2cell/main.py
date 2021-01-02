@@ -1,48 +1,56 @@
-# @author        Jiawei Lu
-# @email         jiaweil9@asu.edu
-# @create date   2020-04-16 16:27:39
-# @desc          [main file]
-
-# todo: segment file
-
+from .initnet import CInitNet
+from .netgen import CNetGenerator
+from .outputnet import *
+from .util import exitProgram
+from .settings import *
 
 
-import initnet
-import netgen
-from outputnet import *
+def readMacroNet(cwd='', coordinate_type='ll', geometry_source='l', unit_of_length='m', segment_unit='m', speed_unit='mph',
+                 link_types=None, connector_type=None, min_link_length=3.0, combine=False, width_of_lane=3.5):
 
+    if coordinate_type not in ['m', 'll', 'f']:
+        print('ERROR: coordinate_type must be chosen from m,ll,f')
+        exitProgram()
+    if geometry_source not in ['n', 'l', 'g']:
+        print('ERROR: geometry_source must be chosen from n,l,g')
+        exitProgram()
+    if unit_of_length not in ['m', 'km', 'mi', 'f']:
+        print('unit_of_length must be chosen from m,km,mi,f')
+        exitProgram()
+    if segment_unit not in ['m', 'km', 'mi', 'f']:
+        print('segment_unit must be chosen from m,km,mi,f')
+        exitProgram()
+    if speed_unit not in ['mph', 'kph']:
+        print('speed_unit must be chosen from mph,kph')
+        exitProgram()
+    if speed_unit not in ['mph', 'kph']:
+        print('speed_unit must be chosen from mph,kph')
+        exitProgram()
+    if (link_types is not None) and (not isinstance(link_types, list)):
+        print('argument link_type_list must be a list')
+        exitProgram()
+    if not (isinstance(min_link_length, int) or isinstance(min_link_length, float)):
+        print('min_link_length must be an integer and float')
+        exitProgram()
+    if not isinstance(combine, bool):
+        print('combine must be a bool')
+        exitProgram()
+    if not (isinstance(width_of_lane, int) or isinstance(width_of_lane, float)):
+        print('width_of_lane must be an integer and float')
+        exitProgram()
+    if width_of_lane <= 0:
+        print('width_of_lane must be positive')
+        exitProgram()
 
-
-
-working_directory = r'consolidated'
-
-coordinate_type = 'll'                          # m: meter, ll: latlon, f: feet
-geometry_source = 'l'                           # n: none, l: link file, g: geometry file
-unit_of_length = 'm'                           # m: meter, km:kilometer, mi: mile, f: feet      md:mile
-segment_unit = 'm'                              # m: meter, km:kilometer, mi: mile, f: feet
-speed_unit = 'mph'                              # mph: mile per hour, kph: kilometer per hour
-
-link_type_list = [1,2,3,4,5,6,7]                      # discard link types not in this list
-connector_type = -1                             # link type of connetors, -1 if no connector
-
-
-min_link_length = 3.0                           # meter, links shorter than that will be removed, > 2 * lenght_of_cut[0]
-comb_links = False                              # remove 2-degree nodes
-auto_connection = True                          # generate movement connections for intersections without predefined movement info
-connector_geometry_for_output = 2               # 1: with lane offset; 2: no lane offset
-
-length_of_cell = 7.0
-length_of_cut = {0: 1.0, 1: 8.0, 2: 12.0, 3: 14.0, 4: 16.0, 5: 18.0, 6: 20, 7:22, 8:24}  # e.g. 2:8.0 cut 8 meters if the original macro link has 2 lanes, etc
-for i in range(9,100): length_of_cut[i] = 25
-cells_in_queue_area = 0            # for Signalized Intersections
-width_of_lane = 3.5
-
-
-if __name__ == "__main__":
-    macro_net = initnet.CInitNet(working_directory, coordinate_type, geometry_source, unit_of_length, segment_unit, speed_unit,
-                                 link_type_list, connector_type, min_link_length, comb_links, width_of_lane)
+    macro_net = CInitNet(cwd, coordinate_type, geometry_source, unit_of_length, segment_unit, speed_unit,
+                         link_types, connector_type, min_link_length, combine, width_of_lane)
     macro_net.readInputData()
     macro_net.initialization()
-    net_generator = netgen.CNetGenerator(macro_net, length_of_cell, length_of_cut, width_of_lane, auto_connection, cells_in_queue_area)
+
+    return macro_net
+
+
+def generateHybridNets(macro_net, length_of_cell=7.0, auto_connection=True):
+    net_generator = CNetGenerator(macro_net, length_of_cell, length_of_cut, macro_net.width_of_lane, auto_connection, cells_in_queue_area)
     net_generator.generateNet()
     outputNetworks(macro_net, net_generator, connector_geometry_for_output)

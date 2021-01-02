@@ -1,9 +1,3 @@
-# @author        Jiawei Lu
-# @email         jiaweil9@asu.edu
-# @create date   2020-04-16 17:51:42
-# @desc          [description]
-
-
 class CMicroNode:
     def __init__(self):
         self.node_id = 0

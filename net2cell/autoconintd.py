@@ -1,8 +1,3 @@
-# @author       Jiawei Lu
-# @email        jiaweil9@asu.edu
-# @create date  2020/07/18 22:08
-# @desc         [auto connection for intersection and diverge]
-
 import math
 
 class CAutoConnectorIntD:

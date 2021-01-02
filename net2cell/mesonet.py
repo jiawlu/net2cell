@@ -1,9 +1,3 @@
-# @author        Jiawei Lu
-# @email         jiaweil9@asu.edu
-# @create date   2020-04-16 17:18:07
-# @desc          [description]
-
-
 class CMesoNode:
     def __init__(self):
         self.name = ''
