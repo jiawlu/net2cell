@@ -8,7 +8,7 @@ modelling needs.
 .. figure:: imgs/framework.png
     :name: framework
     :align: center
-    :width: 50%
+    :width: 80%
 
 
 Installation
@@ -23,7 +23,7 @@ Prepare macroscopic network
 ------------------------------
 
 net2cell is compatible with any networks that meet the GMNS standard. Users can use their networks
-at hand as inputs of net2cell, but the procedure of conversion to GMNS format may be needed before
+at hand as inputs of net2cell, but converting networks to GMNS format may be needed before
 feeding them to net2cell. For a quick start, users are recommended to use `osm2gmns`_ to quickly
 get a macroscopic from `OpenStreetMap`_ (OSM). osm2gmns helps users easily convert the OSM map data
 to node and link network files in the GMNS format.
@@ -93,7 +93,6 @@ Function ``generateHybridNets()`` build the mesoscopic and microscopic network f
 
 Visualization
 ------------------------------
-
 You can visualize generated networks using `NeXTA`_ or `QGis`_.
 
 - NeXTA
@@ -101,24 +100,31 @@ You can visualize generated networks using `NeXTA`_ or `QGis`_.
 .. figure:: imgs/nexta-show.png
     :name: open
     :align: center
-    :width: 50%
+    :width: 80%
 
     Open networks and synchronized display
 
 .. figure:: imgs/nexta-net.png
     :name: net
     :align: center
-    :width: 50%
+    :width: 80%
 
     Arizona State University, Tempe Campus
 
+Interested readers can check the `link`_ for our online transportation modelling visualization platform, in which
+network data is provided by net2cell.
+
+
+Next
+------------------------------
 The potential next step is to manage OD zone structure and in the NeXTA tool and perform traffic assignment and
-simulation using DTALite for transportation network simulation and analysis.
+simulation using `DTALite`_ for transportation network simulation and analysis.
 
 
 .. _`GMNS`: https://github.com/zephyr-data-specs/GMNS
-.. _`OpenStreetMap`: https://www.openstreetmap.org
 .. _`osm2gmns`: https://osm2gmns.readthedocs.io/
+.. _`OpenStreetMap`: https://www.openstreetmap.org
 .. _`NeXTA`: https://github.com/xzhou99/NeXTA-GMNS
 .. _`QGis`: https://qgis.org
-.. _`wkt`: https://en.wikipedia.org/wiki/Well-known_text_representation_of_geometry
+.. _`link`: https://github.com/xzhou99/Dtalite_traffic_assignment
+.. _`DTALite`: https://github.com/xzhou99/Dtalite_traffic_assignment
