@@ -126,5 +126,5 @@ simulation using `DTALite`_ for transportation network simulation and analysis.
 .. _`OpenStreetMap`: https://www.openstreetmap.org
 .. _`NeXTA`: https://github.com/xzhou99/NeXTA-GMNS
 .. _`QGis`: https://qgis.org
-.. _`link`: https://github.com/xzhou99/Dtalite_traffic_assignment
+.. _`link`: https://asu-trans-ai-lab.github.io/website_openlayer_4GMNS
 .. _`DTALite`: https://github.com/xzhou99/Dtalite_traffic_assignment
