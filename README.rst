@@ -3,14 +3,12 @@ NET2CELL
 
 For any given networks that meet the `GMNS`_ standard, net2cell helps users automatically build
 mesoscopic and lane-by-lane cell-based microscopic transportation networks to accommdate different
-modelling needs. For a quick start, users can easily get a network from `OpenStreetMap`_ (OSM)
-using `osm2gmns`_, then use the network as an input of net2cell to obtain the corresponding hybrid
-networks.
+modelling needs.
 
 .. figure:: imgs/framework.png
     :name: framework
     :align: center
-    :width: 80%
+    :width: 60%
 
 
 Installation
@@ -26,9 +24,9 @@ Prepare macroscopic network
 
 net2cell is compatible with any networks that meet the GMNS standard. Users can use their networks
 at hand as inputs of net2cell, but the procedure of conversion to GMNS format may be needed before
-feeding them to net2cell. For a quick start, users are recommended to use osm2gmns to quickly get
-a macroscopic from OpenStreetMap (OSM). osm2gmns helps users easily convert the OSM map data to node
-and link network files in the GMNS format.
+feeding them to net2cell. For a quick start, users are recommended to use `osm2gmns`_ to quickly
+get a macroscopic from `OpenStreetMap`_ (OSM). osm2gmns helps users easily convert the OSM map data
+to node and link network files in the GMNS format.
 
 
 Use net2cell
@@ -103,14 +101,14 @@ You can visualize generated networks using `NeXTA`_ or `QGis`_.
 .. figure:: imgs/nexta-show.png
     :name: open
     :align: center
-    :width: 80%
+    :width: 60%
 
     Open networks and synchronized display
 
 .. figure:: imgs/nexta-net.png
     :name: net
     :align: center
-    :width: 80%
+    :width: 60%
 
     Arizona State University, Tempe Campus
 
