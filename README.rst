@@ -42,6 +42,7 @@ Get hybrid networks
     >>> nc.generateHybridNets(macro_net)
 
 Arguments of function ``readMacroNet()``:
+
 | **Argument**          | Note          |
 | --------------------- | ------------- |
 | **cwd**               | Content Cell  |
