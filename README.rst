@@ -8,7 +8,7 @@ modelling needs.
 .. figure:: imgs/framework.png
     :name: framework
     :align: center
-    :width: 60%
+    :width: 50%
 
 
 Installation
@@ -101,14 +101,14 @@ You can visualize generated networks using `NeXTA`_ or `QGis`_.
 .. figure:: imgs/nexta-show.png
     :name: open
     :align: center
-    :width: 60%
+    :width: 50%
 
     Open networks and synchronized display
 
 .. figure:: imgs/nexta-net.png
     :name: net
     :align: center
-    :width: 60%
+    :width: 50%
 
     Arizona State University, Tempe Campus
 
