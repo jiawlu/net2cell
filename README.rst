@@ -10,6 +10,10 @@ modelling needs.
     :align: center
     :width: 80%
 
+| 
+| Development Support:
+| Ph.D. Student: Jiawei Lu (jiaweil9@asu.edu); Dr. Xuesong (Simon) Zhou (xzhou74@asu.edu)
+| School of Sustainable Engineering and the Built Environment, Arizona State University
 
 Installation
 ------------------------------
